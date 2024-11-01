@@ -8,6 +8,7 @@ from rich.console import ConsoleRenderable, Console, ConsoleOptions, RenderResul
 from rich.syntax import Syntax
 from rich.text import Text
 from rich.align import Align
+from rich import box
 import polars as pl
 
 from io import StringIO
@@ -59,6 +60,19 @@ class Heading(DHeading):
         if self.figlet_font is not None:
             self.code_block.text = Text(pyfiglet.figlet_format(str(text), font=self.figlet_font))
             yield Padding(Align.center(self.code_block), (1,0,0,0))
+        elif self.tag == "h3":
+            yield Panel(
+                text,
+                box=box.HEAVY
+            )
+        elif self.tag == "h4":
+            yield Panel(
+                text,
+                box=box.ASCII
+            )
+        elif self.tag == "h5":
+            text.style = "underline"
+            yield text
         else:
             yield text
 
