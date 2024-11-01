@@ -85,7 +85,7 @@ class Controller(object):
 
         body_lines = capture.get().splitlines()
 
-        desired_height = self.host.console.height - 5
+        desired_height = self.host.console.height - 7
         # get last n lines if too many lines ...
         body_lines = body_lines[-desired_height:]
         body = Panel(Layout(Text.from_ansi("\n".join(body_lines)), name="body"), title=state.current_step.section.title)
