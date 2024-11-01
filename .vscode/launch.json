@@ -10,7 +10,7 @@
             "request": "launch",
             "module": "smack.__main__",
             "args": [
-                "show",
+                "talk",
                 "examples/"
             ],
             "justMyCode": false

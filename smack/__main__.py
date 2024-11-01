@@ -7,7 +7,7 @@ app = typer.Typer()
 
 
 @app.command()
-def show(path: Path = typer.Argument(
+def talk(path: Path = typer.Argument(
         ..., help="The presentation to show."
     ),):
     pres = Presentation(path)
@@ -17,7 +17,7 @@ def show(path: Path = typer.Argument(
         controller.run()
 
 @app.command()
-def inspect(path: Path = typer.Argument(
+def notes(path: Path = typer.Argument(
         ..., help="The file to inspect."
     ),):
     pres = Presentation(path)
