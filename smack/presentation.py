@@ -18,7 +18,7 @@ from rich.console import ConsoleRenderable
 from .rich import ConsoleMarkdown
 from .mdit import md
 
-default_stepinfo = md.parse("!!! -")
+last_stepinfo = md.parse("!!! end\n\tContinue to next section...")
 
 class Step(object):
     renderable: ConsoleRenderable
@@ -83,8 +83,7 @@ class Section(object):
                 diff_tokens += element.to_tokens()
                 body_tokens += element.to_tokens()
 
-        if len(diff_tokens) > 0:
-            self.steps.append(Step(self, SyntaxTreeNode(default_stepinfo).children[0], SyntaxTreeNode(body_tokens)))
+        self.steps.append(Step(self, SyntaxTreeNode(last_stepinfo).children[0], SyntaxTreeNode(body_tokens)))
 
 
     def parse_front_matter(self):
