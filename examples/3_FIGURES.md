@@ -4,7 +4,7 @@ title: Figures
 
 ## Figures
 
-```                                                                            
+```
                ┌────┐┌────────────┐    
                │    ││            │    
                │   ─┼► Message  Q │    
@@ -24,4 +24,4 @@ title: Figures
                │    ◄┼  Database  │    
                │    ││            │    
                └────┘└────────────┘      
-```                               
+```

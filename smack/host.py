@@ -4,8 +4,10 @@ from rich.console import Console
 from rich.layout import Layout
 from rich.padding import Padding
 from rich.panel import Panel
+from rich.text import Text
 from .presentation import Presentation, Section, Step
 import typer
+from io import StringIO
 
 class Host(object):
     console: Console
@@ -76,6 +78,30 @@ class Controller(object):
                     handler()
 
     def show(self, state: State):
-        self.host.console.print(state.current_step.renderable)
+        console = Console(width=self.host.console.width - 4, color_system="truecolor", force_interactive=True, force_terminal=True)
 
-        
+        with console.capture() as capture:
+            console.print(state.current_step.get_body())
+
+        body_lines = capture.get().splitlines()
+
+        desired_height = self.host.console.height - 5
+        # get last n lines if too many lines ...
+        body_lines = body_lines[-desired_height:]
+        body = Panel(Layout(Text.from_ansi("\n".join(body_lines)), name="body"), title=state.current_step.section.title)
+
+        info = Layout(
+            Panel(
+                state.current_step.get_info(), 
+                title=state.current_step.info_title,
+                height=3
+            ),
+            name="info", 
+            size=3
+        )
+
+        root_layout = Layout()
+        root_layout.split_column(body, info)
+
+        self.host.console.print(Layout(Padding(root_layout, (1, 0, 0, 0))))
+        #self.host.console.print(body)

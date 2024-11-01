@@ -14,14 +14,14 @@ from rich.layout import Layout
 from rich.padding import Padding
 from rich.panel import Panel
 from rich.console import ConsoleRenderable
+from rich.text import Text
 
-from .rich import ConsoleMarkdown
+from .rich import ConsoleMarkdown, JustifyMethod
 from .mdit import md
 
 last_stepinfo = md.parse("!!! end\n\tContinue to next section...")
 
 class Step(object):
-    renderable: ConsoleRenderable
     info_node: SyntaxTreeNode
     body_node: SyntaxTreeNode
     section: "Section"
@@ -30,36 +30,19 @@ class Step(object):
         self.info_node = info
         self.body_node = body
         self.section = section
+        self.info_title = self.info_node.content
 
-        root_layout = Layout()
-        root_layout.split_column(self.get_body(), self.get_info_layout())
-        self.renderable = Layout(Padding(root_layout, (1, 0, 0, 0)))
-
-    def get_body(self):
-        content = ConsoleMarkdown(self.body_node.to_tokens(), justify=self.section.justify)
-        return Layout(Panel(content, title=self.section.title), name="body")
+    def get_body(self) -> ConsoleRenderable:
+        return ConsoleMarkdown(self.body_node.to_tokens(), justify=self.section.justify)
                 
-    def get_info_layout(self):
+    def get_info(self) -> ConsoleRenderable:
         try:
-            title = self.info_node.content
+            return ConsoleMarkdown(self.info_node.children[1].to_tokens())
         except IndexError:
-            title = ""
-        try:
-            content = ConsoleMarkdown(self.info_node.children[1].to_tokens())
-        except IndexError:
-            content = ""
-        return Layout(
-            Panel(
-                content, 
-                title=title,
-                height=3
-            ),
-            name="step_info", 
-            size=3
-        )
+            return Text("")
 
 class Section(object):
-    justify: str | None = "center"
+    justify: JustifyMethod | None = "center"
     title: str | None = None
     front_matter: dict | None = None
     tokens: list[Token]
