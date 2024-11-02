@@ -24,18 +24,20 @@ class CodeBlock(DCodeBlock):
     ) -> RenderResult:
         code = str(self.text)
         lines = code.splitlines()
+
         if len(lines) > 0:
-            max_width = max(len(l) for l in lines)
+            max_width = max(len(l) for l in lines) + 1
         else: 
             max_width = 0
-        padding = 0
+
         syntax = Syntax(
-            code, self.lexer_name, word_wrap=True, padding=padding, background_color="default", code_width=max_width
+            code, self.lexer_name, word_wrap=True, padding=(1, 1, 0, 1), background_color="default", code_width=max_width
         )
+
         if self.lexer_name in ["text"]:
             yield Align.center(syntax)
         else:
-            yield Align.center(Panel(syntax, title=self.lexer_name, width=max_width + 2))
+            yield Align.center(Panel(syntax, title=self.lexer_name, width=max_width + 5))
 
 class Heading(DHeading):
     figlet_font: str | None = None
@@ -132,7 +134,7 @@ class PlotElement(MarkdownElement):
         xlabel = self.data.columns[0]
         label = self.data.columns[1]
         fig = tpl.figure()
-        fig.plot(x, y, label=label, xlabel=xlabel, width=options.max_width - 20, height=options.max_height - 15,  plot_command = "plot '-' w boxes",)
+        fig.plot(x, y, label=label, xlabel=xlabel, width=options.max_width - 20, height=options.max_height - 15)# plot_command = "plot '-' w boxes",)
         self.code_block.text = Text(fig.get_string())
         yield self.code_block
 
